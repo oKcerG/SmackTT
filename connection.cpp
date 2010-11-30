@@ -169,6 +169,7 @@ std::string Connection::acceptAnnounce(const Announce& announce, const User& use
     // to do :
     // torrent limit
     // peer limit
+    // Client whitelist
     return "";
 }
 
