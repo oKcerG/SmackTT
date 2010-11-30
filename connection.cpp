@@ -103,7 +103,6 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
     }
     BencodedString bestr;
     bestr << BencodedString::beginDic;
-    error = "GrecKo <3 Oinkmeup, and vice versa héhéhé :D lol";
     if (!error.empty())
     {
         bestr << "failure reason" << error;
