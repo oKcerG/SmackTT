@@ -31,8 +31,41 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="..\libs\boost_1_46_1" />
+			<Add directory="..\libs\mysql++-3.1.0\lib" />
+			<Add directory="..\libs\mysql-5.5.11\include" />
 		</Compiler>
+		<Unit filename="abstractoptionreader.cpp" />
+		<Unit filename="abstractoptionreader.h" />
+		<Unit filename="announce.h" />
+		<Unit filename="announceoptionreader.cpp" />
+		<Unit filename="announceoptionreader.h" />
+		<Unit filename="bencodedstring.cpp" />
+		<Unit filename="bencodedstring.h" />
+		<Unit filename="config.cpp" />
+		<Unit filename="config.h" />
+		<Unit filename="connection.cpp" />
+		<Unit filename="connection.h" />
+		<Unit filename="database.cpp" />
+		<Unit filename="database.h" />
+		<Unit filename="databaseconfig.cpp" />
+		<Unit filename="databaseconfig.h" />
+		<Unit filename="databaseoptionreader.cpp" />
+		<Unit filename="databaseoptionreader.h" />
+		<Unit filename="fileoptionreader.cpp" />
+		<Unit filename="fileoptionreader.h" />
+		<Unit filename="fu.cpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="option.h" />
+		<Unit filename="server.cpp" />
+		<Unit filename="server.h" />
+		<Unit filename="torrent.h" />
+		<Unit filename="urioptionreader.cpp" />
+		<Unit filename="urioptionreader.h" />
+		<Unit filename="user.cpp" />
+		<Unit filename="user.h" />
+		<Unit filename="utils.cpp" />
+		<Unit filename="utils.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
