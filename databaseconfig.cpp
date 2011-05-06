@@ -7,9 +7,9 @@
 DatabaseConfig::DatabaseConfig()
 {
     FileOptionReader options("xbt_tracker.conf");
-    options.addOption("mysql_host", true, m_host)
-           .addOption("mysql_user", true, m_user)
-           .addOption("mysql_password", true, m_password)
-           .addOption(optPointer(new Option<std::string>("mysql_database", true, m_database)));
+    options.addOption("mysql_host", m_host)
+           .addOption("mysql_user", m_user)
+           .addOption("mysql_password", m_password)
+           .addOption("mysql_database", m_database);
     options.readOptions();
 }

@@ -12,10 +12,12 @@
 #include "server.h"
 #include "utils.h"
 #include <iostream>
+#include "optionmanager.h"
+#include "optionreader.h"
 
 int main()
 {
-    Server server;
+    //Server server;
     return 0;
 }
 
