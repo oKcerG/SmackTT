@@ -1,16 +1,16 @@
 #ifndef URIOPTIONREADER_H
 #define URIOPTIONREADER_H
 
-#include "abstractoptionreader.h"
+#include "optionreader.h"
 #include <string>
 
-class UriOptionReader : public AbstractOptionReader
+class UriOptionReader : public OptionReader
 {
     public:
         UriOptionReader(const std::string& uri);
 
     protected:
-        void readValues();
+        void readOptions();
 
     private:
         std::string m_uri;

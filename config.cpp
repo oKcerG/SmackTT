@@ -1,72 +1,44 @@
 #include "config.h"
-#include "database.h"
 #include "option.h"
+#include "fileoptionreader.h"
+#include "databaseoptionreader.h"
 
-Config::Config(Database& database) : m_fOption("xbt_tracker.conf"), m_dbOption(database)
+Config::Config(Database& database)
 {
-    // default values
-    m_announce_interval = 1800;
-    m_anonymous_announce = true;
-    m_anonymous_connect = true;
-    m_anonymous_scrape = true;
-    m_auto_register = true;
-    m_clean_up_interval = 1;
-    m_daemon = true;
-    m_debug = false;
-    m_full_scrape = false;
-    m_gzip_debug = true;
-    m_gzip_scrape = true;
-    m_listen_ipa = "";
-    m_listen_port = 2710;
-    m_log_access = false;
-    m_log_announce = false;
-    m_log_scrape = false;
-    m_offline_message = "";
-    m_pid_file = "xbt_tracker.pid";
-    m_read_config_interval = 60;
-    m_read_db_interval = 60;
-    m_redirect_url = "";
-    m_scrape_interval = 0;
-    m_table_announce_log = "xbt_announce_log";
-    m_table_files = "xbt_files";
-    m_table_files_users = "xbt_files_users";
-    m_table_scrape_log = "xbt_scrape_log";
-    m_table_users = "xbt_users";
-    m_write_db_interval = 15;
+    m_manager.addReader(new FileOptionReader("xbt_tracker.conf"));
+    m_manager.addReader(new DatabaseOptionReader(database));
 
-    m_fOption.addOption("announce_interval", false, m_announce_interval)
-    .addOption("anonymous_announce", false, m_anonymous_announce)
-    .addOption("anonymous_connect", false, m_anonymous_connect)
-    .addOption("anonymous_scrape", false, m_anonymous_scrape)
-    .addOption("auto_register", false, m_auto_register)
-    .addOption("clean_up_interval", false, m_clean_up_interval)
-    .addOption("daemon", false, m_daemon)
-    .addOption("debug", false, m_debug)
-    .addOption("full_scrape", false, m_full_scrape)
-    .addOption("gzip_debug", false, m_gzip_debug)
-    .addOption("gzip_scrape", false, m_gzip_scrape)
-    .addOption("listen_ipa", false, m_listen_ipa)
-    .addOption("listen_port", false, m_listen_port)
-    .addOption("log_access", false, m_log_access)
-    .addOption("log_announce", false, m_log_announce)
-    .addOption("log_scrape", false, m_log_scrape)
-    .addOption("offline_message", false, m_offline_message)
-    .addOption("pid_file", false, m_pid_file)
-    .addOption("read_config_interval", false, m_read_config_interval)
-    .addOption("read_db_interval", false, m_read_db_interval)
-    .addOption("redirect_url", false, m_redirect_url)
-    .addOption("scrape_interval", false, m_scrape_interval)
-    .addOption("table_announce_log", false, m_table_announce_log)
-    .addOption("table_files", false, m_table_files)
-    .addOption("table_files_users", false, m_table_files_users)
-    .addOption("table_scrape_log", false, m_table_scrape_log)
-    .addOption("table_users", false, m_table_users)
-    .addOption("write_db_interval", false, m_write_db_interval);
-    m_dbOption.copyOptions(m_fOption);
+    m_manager.addOption("announce_interval", m_announce_interval, 1800)
+    .addOption("anonymous_announce", m_anonymous_announce, true)
+    .addOption("anonymous_connect", m_anonymous_connect, true)
+    .addOption("anonymous_scrape", m_anonymous_scrape, true)
+    .addOption("auto_register", m_auto_register, true)
+    .addOption("clean_up_interval", m_clean_up_interval, 1)
+    .addOption("daemon", m_daemon, true)
+    .addOption("debug", m_debug, false)
+    .addOption("full_scrape", m_full_scrape, false)
+    .addOption("gzip_debug", m_gzip_debug, true)
+    .addOption("gzip_scrape", m_gzip_scrape, true)
+    .addOption("listen_ipa", m_listen_ipa, std::string())
+    .addOption("listen_port", m_listen_port, 2710)
+    .addOption("log_access", m_log_access, false)
+    .addOption("log_announce", m_log_announce, false)
+    .addOption("log_scrape", m_log_scrape, false)
+    .addOption("offline_message", m_offline_message, "")
+    .addOption("pid_file", m_pid_file, "xbt_tracker.pid")
+    .addOption("read_config_interval", m_read_config_interval, 60)
+    .addOption("read_db_interval", m_read_db_interval, 60)
+    .addOption("redirect_url", m_redirect_url, "")
+    .addOption("scrape_interval", m_scrape_interval, 0)
+    .addOption("table_announce_log", m_table_announce_log, "xbt_announce_log")
+    .addOption("table_files", m_table_files, "xbt_files")
+    .addOption("table_files_users", m_table_files_users, "xbt_files_users")
+    .addOption("table_scrape_log", m_table_scrape_log, "xbt_scrape_log")
+    .addOption("table_users", m_table_users, "xbt_users")
+    .addOption("write_db_interval", m_write_db_interval, 15);
 }
 
 void Config::read()
 {
-    m_fOption.readOptions();
-    m_dbOption.readOptions();
+    m_manager.readOptions();
 }

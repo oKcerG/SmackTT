@@ -1,16 +1,14 @@
 #ifndef ANNOUNCEOPTIONREADER_H
 #define ANNOUNCEOPTIONREADER_H
 
-#include "abstractoptionreader.h"
+#include "optionreader.h"
 #include <string>
 
-class AnnounceOptionReader : public AbstractOptionReader
+class AnnounceOptionReader : public OptionReader
 {
     public:
         AnnounceOptionReader(const std::string& announceStr);
-
-    protected:
-        void readValues();
+        void readOptions();
 
     private:
         std::string m_announceStr;

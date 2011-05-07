@@ -25,7 +25,7 @@ public:
     }
 
 private:
-    DatabaseConfig(const DatabaseConfig& other){}
+    DatabaseConfig(const DatabaseConfig&);
     std::string m_host;
     std::string m_user;
     std::string m_password;

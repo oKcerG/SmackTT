@@ -4,13 +4,13 @@
 #include <string>
 #include <sstream>
 
-#include <iostream>
+#include <boost/shared_ptr.hpp>
 
-class OptionBase
+class Option
 {
 
 public:
-    OptionBase(const std::string& name, bool mandatory) : m_name(name), m_mandatory(mandatory) {}
+    Option(const std::string& name, bool mandatory) : m_name(name), m_mandatory(mandatory) {}
 
     bool mandatory() const
     {
@@ -30,34 +30,31 @@ private:
 };
 
 
-template <typename T> class Option : public OptionBase
+template <typename T>
+class OptionImpl : public Option
 {
 public:
-    Option(const std::string& name, bool mandatory, T& value) : OptionBase(name, mandatory), m_value(value) {}
+    OptionImpl(const std::string& name, T& value) : Option(name, true), m_value(value)
+    {
+
+    }
+
+    OptionImpl(const std::string& name, T& value, const T& default_value) : Option(name, false), m_value(value)
+    {
+        m_value = default_value;
+    }
 
     void operator<<(const std::string& str)
     {
-        std::istringstream stream(str);
-        stream >> m_value;
+        std::istringstream iss(str);
+        iss >> m_value;
     }
 
 private:
     T& m_value;
 };
 
-template <> class Option<std::string> : public OptionBase
-{
-public:
-    Option(const std::string& name, bool mandatory, std::string& value) : OptionBase(name, mandatory), m_value(value) {}
-
-    void operator<<(const std::string& str)
-    {
-        m_value = str;
-    }
-
-private:
-    std::string& m_value;
-};
-
+template <>
+void OptionImpl<std::string>::operator<<(const std::string& str);
 
 #endif // OPTION_H

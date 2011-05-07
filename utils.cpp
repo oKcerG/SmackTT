@@ -29,7 +29,7 @@ std::string utils::decodeUri(const std::string& uri)
 {
     std::string decoded;
     decoded.reserve(uri.length());
-    for (int i = 0; i < uri.length(); i++)
+    for (size_t i = 0; i < uri.length(); i++)
     {
         char c = uri[i];
         if (c == '%')

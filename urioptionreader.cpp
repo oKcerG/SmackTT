@@ -1,5 +1,6 @@
 #include "urioptionreader.h"
 #include "utils.h"
+#include <vector>
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 
@@ -13,7 +14,7 @@ UriOptionReader::UriOptionReader(const string& uri) : m_uri(uri)
     //ctor
 }
 
-void UriOptionReader::readValues()
+void UriOptionReader::readOptions()
 {
     //*
     typedef iterator_range<string::iterator> stringItRange;

@@ -10,6 +10,7 @@
 #include "config.h"
 #include "database.h"
 #include "urioptionreader.h"
+#include "optionmanager.h"
 #include "user.h"
 #include <ctime>
 #include "torrent.h"
@@ -97,9 +98,9 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
         m_server.database().addAnnounceLog(ipa, a);
         //std::string error = acceptAnnounce();
     }
-    catch (AbstractOptionReader::OptionNotFound& e)
+    catch (...)//abstract_option_reader::OptionNotFound& e)
     {
-        error = "field \"" + e.name() + "\" not found";
+      //  error = "field \"" + e.name() + "\" not found";
     }
     BencodedString bestr;
     bestr << BencodedString::beginDic;
@@ -125,20 +126,18 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
 
 Announce Connection::parseAnnounce(const std::string& uri)
 {
-    UriOptionReader options(uri);
+    OptionManager options;
+    options.addReader(new UriOptionReader(uri));
     Announce a;
-    a.compact = true;
-    a.event = "none";
-    a.numwant = 0;
-    options.addOption("info_hash", true, a.infohash)
-           .addOption("peer_id", true, a.peerid)
-           .addOption("port", true, a.port)
-           .addOption("uploaded", true, a.uploaded)
-           .addOption("downloaded", true, a.downloaded)
-           .addOption("left", true, a.left)
-           .addOption("compact", false, a.compact)
-           .addOption("event", false, a.event)
-           .addOption("numwant", false, a.numwant);
+    options.addOption("info_hash", a.infohash)
+           .addOption("peer_id", a.peerid)
+           .addOption("port", a.port)
+           .addOption("uploaded", a.uploaded)
+           .addOption("downloaded", a.downloaded)
+           .addOption("left", a.left)
+           .addOption("compact", a.compact, true)
+           .addOption("event", a.event, "none")
+           .addOption("numwant", a.numwant, 0);
     options.readOptions();
     std::cout << "info : " << a.infohash << std::endl;
     std::cout << "port : " << a.port << std::endl;

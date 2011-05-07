@@ -1,17 +1,14 @@
 #ifndef FILEOPTIONREADER_H
 #define FILEOPTIONREADER_H
 
-#include "abstractOptionReader.h"
+#include "optionreader.h"
 #include <string>
 
-
-class FileOptionReader : public AbstractOptionReader
+class FileOptionReader : public OptionReader
 {
     public:
         FileOptionReader(const std::string& fileName);
-
-    protected:
-        void readValues();
+        void readOptions();
 
     private:
         std::string m_fileName;

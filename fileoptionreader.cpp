@@ -6,7 +6,7 @@ FileOptionReader::FileOptionReader(const std::string& fileName) : m_fileName(fil
 {
 }
 
-void FileOptionReader::readValues()
+void FileOptionReader::readOptions()
 {
     std::ifstream fileStream(m_fileName.c_str(), std::ifstream::in);
     std::string line;

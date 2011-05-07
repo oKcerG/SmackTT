@@ -1,16 +1,14 @@
 #ifndef DATABASEOPTIONREADER_H
 #define DATABASEOPTIONREADER_H
 
-#include "abstractoptionreader.h"
+#include "optionreader.h"
 class Database;
 
-class DatabaseOptionReader : public AbstractOptionReader
+class DatabaseOptionReader : public OptionReader
 {
     public:
         DatabaseOptionReader(Database& database);
-
-    protected:
-        void readValues();
+        void readOptions();
 
     private:
         Database& m_database;
