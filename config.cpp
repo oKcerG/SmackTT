@@ -1,10 +1,14 @@
 #include "config.h"
-#include "database.h"
 #include "option.h"
+#include "fileoptionreader.h"
+#include "databaseoptionreader.h"
 
-Config::Config(Database& database) : m_fOption("xbt_tracker.conf"), m_dbOption(database)
+Config::Config(Database& database)
 {
-    m_fOption.addOption("announce_interval", m_announce_interval, 1800)
+    m_manager.addReader(new FileOptionReader("xbt_tracker.conf"));
+    m_manager.addReader(new DatabaseOptionReader(database));
+
+    m_manager.addOption("announce_interval", m_announce_interval, 1800)
     .addOption("anonymous_announce", m_anonymous_announce, true)
     .addOption("anonymous_connect", m_anonymous_connect, true)
     .addOption("anonymous_scrape", m_anonymous_scrape, true)
@@ -36,6 +40,5 @@ Config::Config(Database& database) : m_fOption("xbt_tracker.conf"), m_dbOption(d
 
 void Config::read()
 {
-    m_fOption.readOptions();
-    m_dbOption.readOptions();
+    m_manager.readOptions();
 }

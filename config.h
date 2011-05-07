@@ -2,8 +2,7 @@
 #define CONFIG_H
 
 #include <string>
-#include "fileoptionreader.h"
-#include "databaseoptionreader.h"
+#include "optionmanager.h"
 
 class Database;
 
@@ -44,8 +43,7 @@ class Config
 
     protected:
     private:
-        FileOptionReader m_fOption;
-        DatabaseOptionReader m_dbOption;
+        OptionManager m_manager;
         int m_announce_interval;
         bool m_anonymous_connect;
         bool m_anonymous_announce;

@@ -4,11 +4,11 @@
 #include <boost/foreach.hpp>
 #define foreach BOOST_FOREACH
 
-DatabaseOptionReader::DatabaseOptionReader(Database& database) : AbstractOptionReader(), m_database(database)
+DatabaseOptionReader::DatabaseOptionReader(Database& database) : m_database(database)
 {
 }
 
-void DatabaseOptionReader::readValues()
+void DatabaseOptionReader::readOptions()
 {
     m_database.getConfig(m_values);
 }

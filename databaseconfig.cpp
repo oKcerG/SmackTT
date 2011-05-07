@@ -1,4 +1,5 @@
 #include "databaseconfig.h"
+#include "optionmanager.h"
 #include "fileoptionreader.h"
 #include <sstream>
 #include <iostream>
@@ -6,7 +7,7 @@
 
 DatabaseConfig::DatabaseConfig()
 {
-    FileOptionReader options("xbt_tracker.conf");
+    OptionManager options(new FileOptionReader("xbt_tracker.conf"));
     options.addOption("mysql_host", m_host)
            .addOption("mysql_user", m_user)
            .addOption("mysql_password", m_password)

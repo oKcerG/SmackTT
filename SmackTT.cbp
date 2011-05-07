@@ -46,8 +46,6 @@
 			<Add library="mysqlpp" />
 			<Add directory="..\libs\mysql++-3.1.0" />
 		</Linker>
-		<Unit filename="abstractoptionreader.cpp" />
-		<Unit filename="abstractoptionreader.h" />
 		<Unit filename="announce.h" />
 		<Unit filename="announceoptionreader.cpp" />
 		<Unit filename="announceoptionreader.h" />
@@ -68,6 +66,10 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="option.cpp" />
 		<Unit filename="option.h" />
+		<Unit filename="optionmanager.cpp" />
+		<Unit filename="optionmanager.h" />
+		<Unit filename="optionreader.cpp" />
+		<Unit filename="optionreader.h" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.h" />
 		<Unit filename="torrent.h" />

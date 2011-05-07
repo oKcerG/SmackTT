@@ -10,6 +10,7 @@
 #include "config.h"
 #include "database.h"
 #include "urioptionreader.h"
+#include "optionmanager.h"
 #include "user.h"
 #include <ctime>
 #include "torrent.h"
@@ -125,7 +126,8 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
 
 Announce Connection::parseAnnounce(const std::string& uri)
 {
-    UriOptionReader options(uri);
+    OptionManager options;
+    options.addReader(new UriOptionReader(uri));
     Announce a;
     options.addOption("info_hash", a.infohash)
            .addOption("peer_id", a.peerid)
