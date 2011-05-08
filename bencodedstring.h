@@ -8,15 +8,15 @@
 class BencodedString
 {
 public:
-    typedef BencodedString& manipulator (BencodedString&);
+    typedef BencodedString& manipulator(BencodedString&);
 
-    BencodedString(std::string data = std::string());
+    BencodedString(const std::string& data = std::string());
 
-    std::string str() const;
+    const std::string& str() const;
 
     BencodedString& operator<<(int i);
-    BencodedString& operator<<(std::string str);
-    BencodedString& operator<<(manipulator manip);
+    BencodedString& operator<<(const std::string& str);
+    BencodedString& operator<<(const manipulator& manip);
 
     static BencodedString& beginDic(BencodedString& bstr);
     static BencodedString& beginList(BencodedString& bstr);
