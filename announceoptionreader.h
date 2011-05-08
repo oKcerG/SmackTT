@@ -8,9 +8,9 @@ class AnnounceOptionReader : public OptionReader
 {
     public:
         AnnounceOptionReader(const std::string& announceStr);
-        void readOptions();
 
     private:
+        void doReadOptions();
         std::string m_announceStr;
 };
 

@@ -8,9 +8,9 @@ class DatabaseOptionReader : public OptionReader
 {
     public:
         DatabaseOptionReader(Database& database);
-        void readOptions();
 
     private:
+        void doReadOptions();
         Database& m_database;
 };
 

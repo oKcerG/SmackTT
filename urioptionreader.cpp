@@ -14,10 +14,10 @@ UriOptionReader::UriOptionReader(const string& uri) : m_uri(uri)
     //ctor
 }
 
-void UriOptionReader::readOptions()
+void UriOptionReader::doReadOptions()
 {
     //*
-    typedef iterator_range<string::iterator> stringItRange;
+    typedef iterator_range<string::const_iterator> stringItRange;
     typedef vector<stringItRange> splitVector;
     splitVector splitVec;
     split(splitVec, m_uri, is_any_of("&="));

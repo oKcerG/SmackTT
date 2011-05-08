@@ -7,7 +7,7 @@ AnnounceOptionReader::AnnounceOptionReader(const std::string& announceStr) : m_a
     //ctor
 }
 
-void AnnounceOptionReader::readOptions()
+void AnnounceOptionReader::doReadOptions()
 {
     size_t pos = 0;
     if (m_announceStr.length() > 34)
