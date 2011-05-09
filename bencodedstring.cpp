@@ -1,11 +1,11 @@
 #include "bencodedstring.h"
 #include <sstream>
 
-BencodedString::BencodedString(std::string data) : m_data(data)
+BencodedString::BencodedString(const std::string& data) : m_data(data)
 {
 }
 
-std::string BencodedString::str() const
+const std::string& BencodedString::str() const
 {
     return m_data;
 }
@@ -18,7 +18,7 @@ BencodedString& BencodedString::operator<<(int i)
     return *this;
 }
 
-BencodedString& BencodedString::operator<<(std::string str)
+BencodedString& BencodedString::operator<<(const std::string& str)
 {
     std::ostringstream stream;
     stream << str.size();
@@ -26,7 +26,7 @@ BencodedString& BencodedString::operator<<(std::string str)
     return *this;
 }
 
-BencodedString& BencodedString::operator<<(manipulator manip)
+BencodedString& BencodedString::operator<<(const manipulator& manip)
 {
     return manip(*this);
 }

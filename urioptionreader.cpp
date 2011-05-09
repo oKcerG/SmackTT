@@ -14,34 +14,33 @@ UriOptionReader::UriOptionReader(const string& uri) : m_uri(uri)
     //ctor
 }
 
-void UriOptionReader::readOptions()
+void UriOptionReader::doReadOptions()
 {
-    //*
-    typedef iterator_range<string::iterator> stringItRange;
-    typedef vector<stringItRange> splitVector;
-    splitVector splitVec;
-    split(splitVec, m_uri, is_any_of("&="));
-    std::string key;
-    foreach (const stringItRange& it, splitVec)
+
+    string key, value;
+    bool keyFound = false;
+    size_t l = m_uri.length();
+    for (size_t i = 0; i < l; i++)
     {
-        if (key.empty())
+        char c = m_uri[i];
+        if (!keyFound)
         {
-            key = copy_range<std::string>(it);
+            if (c == '=')
+                keyFound = true;
+            else
+                key += c;
         }
         else
         {
-            m_values[key] = copy_range<std::string>(it);//utils::decodeUri(copy_range<std::string>(it));
-            key.clear();
+            if (c == '&')
+            {
+                m_values[key] = value;//utils::decodeUri(value);
+                key.clear();
+                value.clear();
+                keyFound = false;
+            }
+            else
+                value += c;
         }
     }
-    //*/
-    /*
-    typedef split_iterator<string::iterator> sIt;
-    for (sIt it = make_split_iterator(m_uri, first_finder("=&", all());
-             it != sIt();
-             ++it)
-             {
-                 cout << "#########################\n" << copy_range<std::string>(*it) << endl;
-             }
-    */
 }

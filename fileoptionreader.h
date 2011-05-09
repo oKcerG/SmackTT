@@ -8,9 +8,9 @@ class FileOptionReader : public OptionReader
 {
     public:
         FileOptionReader(const std::string& fileName);
-        void readOptions();
 
     private:
+        void doReadOptions();
         std::string m_fileName;
 };
 

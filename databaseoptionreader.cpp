@@ -8,7 +8,7 @@ DatabaseOptionReader::DatabaseOptionReader(Database& database) : m_database(data
 {
 }
 
-void DatabaseOptionReader::readOptions()
+void DatabaseOptionReader::doReadOptions()
 {
     m_database.getConfig(m_values);
 }

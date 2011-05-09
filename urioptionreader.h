@@ -9,10 +9,8 @@ class UriOptionReader : public OptionReader
     public:
         UriOptionReader(const std::string& uri);
 
-    protected:
-        void readOptions();
-
     private:
+        void doReadOptions();
         std::string m_uri;
 };
 

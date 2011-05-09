@@ -4,26 +4,19 @@
 #include <string>
 #include <sstream>
 
-#include <boost/shared_ptr.hpp>
-
 class Option
 {
 
 public:
-    Option(const std::string& name, bool mandatory) : m_name(name), m_mandatory(mandatory) {}
+    Option(const std::string& name, bool mandatory);
 
-    bool mandatory() const
-    {
-        return m_mandatory;
-    }
-    const std::string& name() const
-    {
-        return m_name;
-    }
+    bool mandatory() const;
+    const std::string& name() const;
 
-    virtual void operator<<(const std::string& str) = 0;
+    void operator<<(const std::string& str);
 
 private:
+    virtual void setValue(const std::string& str) = 0;
     std::string m_name;
     bool m_mandatory;
 
@@ -44,17 +37,16 @@ public:
         m_value = default_value;
     }
 
-    void operator<<(const std::string& str)
+private:
+    void setValue(const std::string& str)
     {
         std::istringstream iss(str);
         iss >> m_value;
     }
-
-private:
     T& m_value;
 };
 
 template <>
-void OptionImpl<std::string>::operator<<(const std::string& str);
+void OptionImpl<std::string>::setValue(const std::string& str);
 
 #endif // OPTION_H

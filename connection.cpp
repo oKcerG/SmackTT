@@ -126,8 +126,7 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
 
 Announce Connection::parseAnnounce(const std::string& uri)
 {
-    OptionManager options;
-    options.addReader(new UriOptionReader(uri));
+    OptionManager options(new UriOptionReader(uri));
     Announce a;
     options.addOption("info_hash", a.infohash)
            .addOption("peer_id", a.peerid)
