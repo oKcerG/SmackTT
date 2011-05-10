@@ -39,6 +39,7 @@
 			<Add directory="..\libs\boost_1_46_1" />
 			<Add directory="..\libs\mysql++-3.1.0\lib" />
 			<Add directory="..\libs\mysql-5.5.11\include" />
+			<Add directory="..\libs\mysql-5.5.12-win32\include" />
 		</Compiler>
 		<Linker>
 			<Add library="wsock32" />
@@ -47,8 +48,6 @@
 			<Add directory="..\libs\mysql++-3.1.0" />
 		</Linker>
 		<Unit filename="announce.h" />
-		<Unit filename="announceoptionreader.cpp" />
-		<Unit filename="announceoptionreader.h" />
 		<Unit filename="bencodedstring.cpp" />
 		<Unit filename="bencodedstring.h" />
 		<Unit filename="config.cpp" />
