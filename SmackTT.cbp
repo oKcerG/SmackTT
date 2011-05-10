@@ -16,6 +16,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="..\libs\boost_1_46_1\bin.v2\libs\system\build\gcc-mingw-4.5.2\debug\link-static\runtime-link-static\threading-multi\libboost_system-mgw45-mt-sd-1_46_1.a" />
+					<Add library="..\libs\boost_1_46_1\bin.v2\libs\thread\build\gcc-mingw-4.5.2\debug\link-static\runtime-link-static\threading-multi\libboost_thread-mgw45-mt-sd-1_46_1.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -29,6 +30,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="..\libs\boost_1_46_1\bin.v2\libs\system\build\gcc-mingw-4.5.2\release\link-static\runtime-link-static\threading-multi\libboost_system-mgw45-mt-s-1_46_1.a" />
+					<Add library="..\libs\boost_1_46_1\bin.v2\libs\thread\build\gcc-mingw-4.5.2\release\link-static\runtime-link-static\threading-multi\libboost_thread-mgw45-mt-s-1_46_1.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -69,6 +71,8 @@
 		<Unit filename="optionmanager.h" />
 		<Unit filename="optionreader.cpp" />
 		<Unit filename="optionreader.h" />
+		<Unit filename="schedule.cpp" />
+		<Unit filename="schedule.h" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.h" />
 		<Unit filename="torrent.h" />

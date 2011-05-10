@@ -13,11 +13,11 @@ int main()
 {
     //Server server;
     Schedule schedule;
-    schedule.addTimeout(3, salut);
+    schedule.addTimeout(1, salut);
     for (;;)
     {
         std::cout << "hello" << std::endl;
-        Sleep(2000);
+        Sleep(1000);
     }
 
     return 0;
