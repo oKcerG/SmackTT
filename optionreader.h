@@ -8,7 +8,7 @@ class OptionReader
 {
 public:
     OptionReader();
-    virtual ~OptionReader() = 0;
+    virtual ~OptionReader();
     const std::map<std::string, std::string>& values() const;
     void readOptions();
 
