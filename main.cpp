@@ -13,11 +13,13 @@ int main()
 {
     //Server server;
     Schedule schedule;
-    schedule.addTimeout(1, salut);
-    for (;;)
+    boost::asio::repeating_timer* timer = schedule.addTimeout(1, salut);
+    for (int i = 0;;++i)
     {
         std::cout << "hello" << std::endl;
-        Sleep(1000);
+        Sleep(2000);
+        if (i == 3)
+            delete timer;
     }
 
     return 0;

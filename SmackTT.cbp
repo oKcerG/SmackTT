@@ -38,6 +38,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add option="-D_WIN32_WINNT=0x0501" />
+			<Add option="-DBOOST_THREAD_USE_LIB" />
 			<Add directory="..\libs\boost_1_46_1" />
 			<Add directory="..\libs\mysql++-3.1.0\lib" />
 			<Add directory="..\libs\mysql-5.5.11\include" />

@@ -2,14 +2,14 @@
 #define SCHEDULE_H
 
 #include <boost/asio/io_service.hpp>
+#include "basic_repeating_timer.h"
 
 class Schedule
 {
     typedef void(*timeout_handler)(const boost::system::error_code&);
 public:
     Schedule();
-    ~Schedule();
-    void addTimeout(int seconds, timeout_handler handler);
+    boost::asio::repeating_timer* addTimeout(int seconds, timeout_handler handler); //give ownership of the timer to the caller, stops when deleted
 
 private:
     boost::asio::io_service m_service;
