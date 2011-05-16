@@ -15,7 +15,8 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="..\libs\boost_1_46_1\bin.v2\libs\system\build\gcc-mingw-4.5.2\debug\link-static\threading-multi\libboost_system-mgw45-mt-d-1_46_1.a" />
+					<Add library="..\libs\boost_1_46_1\bin.v2\libs\system\build\gcc-mingw-4.5.2\debug\link-static\runtime-link-static\threading-multi\libboost_system-mgw45-mt-sd-1_46_1.a" />
+					<Add library="..\libs\boost_1_46_1\bin.v2\libs\thread\build\gcc-mingw-4.5.2\debug\link-static\runtime-link-static\threading-multi\libboost_thread-mgw45-mt-sd-1_46_1.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -28,7 +29,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="..\libs\boost_1_46_1\bin.v2\libs\system\build\gcc-mingw-4.5.2\release\link-static\threading-multi\libboost_system-mgw45-mt-1_46_1.a" />
+					<Add library="..\libs\boost_1_46_1\bin.v2\libs\system\build\gcc-mingw-4.5.2\release\link-static\runtime-link-static\threading-multi\libboost_system-mgw45-mt-s-1_46_1.a" />
+					<Add library="..\libs\boost_1_46_1\bin.v2\libs\thread\build\gcc-mingw-4.5.2\release\link-static\runtime-link-static\threading-multi\libboost_thread-mgw45-mt-s-1_46_1.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -36,9 +38,11 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add option="-D_WIN32_WINNT=0x0501" />
+			<Add option="-DBOOST_THREAD_USE_LIB" />
 			<Add directory="..\libs\boost_1_46_1" />
 			<Add directory="..\libs\mysql++-3.1.0\lib" />
 			<Add directory="..\libs\mysql-5.5.11\include" />
+			<Add directory="..\libs\mysql-5.5.12-win32\include" />
 		</Compiler>
 		<Linker>
 			<Add library="wsock32" />
@@ -47,8 +51,6 @@
 			<Add directory="..\libs\mysql++-3.1.0" />
 		</Linker>
 		<Unit filename="announce.h" />
-		<Unit filename="announceoptionreader.cpp" />
-		<Unit filename="announceoptionreader.h" />
 		<Unit filename="bencodedstring.cpp" />
 		<Unit filename="bencodedstring.h" />
 		<Unit filename="config.cpp" />
@@ -70,6 +72,8 @@
 		<Unit filename="optionmanager.h" />
 		<Unit filename="optionreader.cpp" />
 		<Unit filename="optionreader.h" />
+		<Unit filename="schedule.cpp" />
+		<Unit filename="schedule.h" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.h" />
 		<Unit filename="torrent.h" />
@@ -81,6 +85,7 @@
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
