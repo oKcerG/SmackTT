@@ -17,29 +17,39 @@ Server::Server() : m_dbConfig(),
 {
     std::cout << "Server construct\n";
     m_config.read();
-    listen();
-    m_service.run();
 }
+
 
 Server::~Server()
 {
     std::cout << "Server destruct\n";
 }
 
+
 const Config& Server::config()
 {
     return m_config;
 }
+
 
 Database& Server::database()
 {
     return m_database;
 }
 
+
 boost::asio::io_service& Server::service()
 {
     return m_service;
 }
+
+
+void Server::run()
+{
+    listen();
+    m_service.run();
+}
+
 
 void Server::listen()
 {
@@ -49,6 +59,7 @@ void Server::listen()
                             boost::bind(&Server::accept, this, connection,
                                         ba::placeholders::error));
 }
+
 
 void Server::accept(Connection::pointer connection, const boost::system::error_code& error)
 {
