@@ -10,7 +10,7 @@ class DatabaseOptionReader : public OptionReader
         DatabaseOptionReader(Database& database);
 
     private:
-        void doReadOptions();
+        void doReadOptions(std::map<std::string, std::string>& values);
         Database& m_database;
 };
 

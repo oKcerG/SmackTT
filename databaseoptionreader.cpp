@@ -8,7 +8,7 @@ DatabaseOptionReader::DatabaseOptionReader(Database& database) : m_database(data
 {
 }
 
-void DatabaseOptionReader::doReadOptions()
+void DatabaseOptionReader::doReadOptions(std::map<std::string, std::string>& values)
 {
-    m_database.getConfig(m_values);
+    m_database.getConfig(values);
 }

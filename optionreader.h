@@ -9,14 +9,10 @@ class OptionReader
 public:
     OptionReader();
     virtual ~OptionReader();
-    const std::map<std::string, std::string>& values() const;
-    void readOptions();
-
-protected:
-    std::map<std::string, std::string> m_values;
+    void readOptions(std::map<std::string, std::string>& values);
 
 private:
-    virtual void doReadOptions() = 0;
+    virtual void doReadOptions(std::map<std::string, std::string>& values) = 0;
 };
 
 #endif // OPTIONREADER_H

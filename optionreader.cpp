@@ -12,13 +12,7 @@ OptionReader::~OptionReader()
 }
 
 
-const std::map<std::string, std::string>& OptionReader::values() const
+void OptionReader::readOptions(std::map<std::string, std::string>& values)
 {
-    return m_values;
-}
-
-
-void OptionReader::readOptions()
-{
-    doReadOptions();
+    doReadOptions(values);
 }

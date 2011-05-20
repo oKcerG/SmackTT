@@ -10,7 +10,7 @@ class FileOptionReader : public OptionReader
         FileOptionReader(const std::string& fileName);
 
     private:
-        void doReadOptions();
+        void doReadOptions(std::map<std::string, std::string>& values);
         std::string m_fileName;
 };
 

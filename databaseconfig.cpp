@@ -7,7 +7,7 @@
 
 DatabaseConfig::DatabaseConfig()
 {
-    OptionManager options(new FileOptionReader("xbt_tracker.conf"));
+    OptionManager options(new FileOptionReader("database.conf"));
     options.addOption("mysql_host", m_host)
            .addOption("mysql_user", m_user)
            .addOption("mysql_password", m_password)

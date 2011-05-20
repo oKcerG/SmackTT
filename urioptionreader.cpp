@@ -14,7 +14,7 @@ UriOptionReader::UriOptionReader(const string& uri) : m_uri(uri)
     //ctor
 }
 
-void UriOptionReader::doReadOptions()
+void UriOptionReader::doReadOptions(std::map<std::string, std::string>& values)
 {
 
     string key, value;
@@ -34,7 +34,7 @@ void UriOptionReader::doReadOptions()
         {
             if (c == '&')
             {
-                m_values[key] = value;//utils::decodeUri(value);
+                values[key] = value;//utils::decodeUri(value);
                 key.clear();
                 value.clear();
                 keyFound = false;

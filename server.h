@@ -6,6 +6,7 @@
 #include "database.h"
 #include "config.h"
 #include "connection.h"
+#include "schedule.h"
 
 class Server
 {
@@ -15,11 +16,13 @@ public:
     boost::asio::io_service& service();
     const Config& config();
     Database& database();
+    void run();
 
 private:
     void listen();
     void accept(Connection::pointer connection, const boost::system::error_code& error);
 
+    Schedule m_schedule;
     DatabaseConfig m_dbConfig;
     Database m_database;
     Config m_config;
