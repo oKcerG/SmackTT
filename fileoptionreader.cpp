@@ -6,7 +6,7 @@ FileOptionReader::FileOptionReader(const std::string& fileName) : m_fileName(fil
 {
 }
 
-void FileOptionReader::doReadOptions()
+void FileOptionReader::doReadOptions(std::map<std::string, std::string>& values)
 {
     std::ifstream fileStream(m_fileName.c_str(), std::ifstream::in);
     std::string line;
@@ -23,7 +23,7 @@ void FileOptionReader::doReadOptions()
         boost::trim(name);
         boost::trim(value);
         if (!name.empty() && name[0] != '#')
-            m_values[name] = value;
+            values[name] = value;
     }
     fileStream.close();
 }

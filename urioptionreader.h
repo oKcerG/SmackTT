@@ -10,7 +10,7 @@ class UriOptionReader : public OptionReader
         UriOptionReader(const std::string& uri);
 
     private:
-        void doReadOptions();
+        void doReadOptions(std::map<std::string, std::string>& values);
         std::string m_uri;
 };
 

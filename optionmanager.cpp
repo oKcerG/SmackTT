@@ -33,10 +33,7 @@ void OptionManager::readOptions()
 {
     std::map<std::string, std::string> values;
     foreach(OptionReader& reader, m_readers)
-    {
-        reader.readOptions();
-        values.insert(reader.values().begin(), reader.values().end());
-    }
+        reader.readOptions(values);
 
     std::map<std::string, std::string>::const_iterator vit, vend = values.end();
     foreach (Option& option, m_options)
