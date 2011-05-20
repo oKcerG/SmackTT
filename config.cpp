@@ -5,7 +5,7 @@
 
 Config::Config(Database& database)
 {
-    m_manager.addReader(new FileOptionReader("xbt_tracker.conf"));
+    m_manager.addReader(new FileOptionReader("smacktt.conf"));
     m_manager.addReader(new DatabaseOptionReader(database));
 
     m_manager.addOption("announce_interval", m_announce_interval, 1800)
