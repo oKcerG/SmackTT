@@ -6,6 +6,7 @@
 
 #define foreach BOOST_FOREACH
 
+/*
 using namespace boost;
 using namespace std;
 
@@ -43,4 +44,4 @@ void UriOptionReader::doReadOptions(std::map<std::string, std::string>& values)
                 value += c;
         }
     }
-}
+}*/

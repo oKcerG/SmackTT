@@ -10,14 +10,31 @@
 #include "config.h"
 #include "database.h"
 #include "urioptionreader.h"
+#include "istreamoptionreader.h"
 #include "optionmanager.h"
 #include "user.h"
 #include <ctime>
 #include "torrent.h"
+#include <boost/algorithm/string.hpp>
 
 #define foreach BOOST_FOREACH
 
 namespace ba = boost::asio;
+
+std::ostream& operator<<(std::ostream& stream, const std::map<std::string,std::string>& map)
+{
+    typedef std::pair<std::string, std::string> string_pair;
+    foreach (const string_pair& pair, map)
+    {
+        stream.width(15);
+        stream << pair.first << " : " << pair.second << std::endl;
+    }
+}
+
+inline void trim_left(std::string& text)
+{
+    boost::trim_left(text);
+}
 
 Connection::Connection(Server& server) : m_socket(server.service()), m_server(server)
 {
@@ -45,15 +62,26 @@ void Connection::read(const boost::system::error_code& error, std::size_t transf
 {
     if (error)
         std::cerr << "Connection read error : " << error.message() << std::endl;
+
     std::istream is(&m_buffer);
-    std::string get, request;
-    is >> get >> request;
+
+    std::string method, uri, http_version;
+    is >> method >> uri >> http_version;
+    is.ignore(2); // ignore CR LF
+
+    IStreamOptionReader<':','\n', doNothing, trim_left, alwaysFalse> headersReader(is);
+    std::map<std::string, std::string> headers;
+    headersReader.readOptions(headers);
+
+    std::cout << "\n# HTTP HEADERS :\n" << headers;
+
     ba::ip::tcp::endpoint endpoint = m_socket.remote_endpoint();
     ba::ip::address_v4 address = endpoint.address().to_v4();
-    handleRequest(request, address.to_ulong());
+
+    handleRequest(uri, address.to_ulong());
+
     ba::async_write(m_socket, ba::buffer(m_response),
                     boost::bind(&Connection::write, shared_from_this(), ba::placeholders::error));
-    std::cout << "\n--------------------------------------\n\n";
 }
 
 void Connection::write(const boost::system::error_code& error)
@@ -79,7 +107,7 @@ void Connection::handleRequest(const std::string& request, const unsigned long &
         std::cerr << "method not found!\n";
     std::string method = request.substr(pos, pos2 - pos);
     pos2++;
-    std::cout << method << std::endl;
+    std::cout << "\n# METHOD : " << method << std::endl;
     std::string uri = request.substr(pos2, request.length() - pos2);
     if (method == "announce")
         handleAnnounce(passkey, uri, ipa);
@@ -87,20 +115,25 @@ void Connection::handleRequest(const std::string& request, const unsigned long &
 
 void Connection::handleAnnounce(const std::string& passkey, const std::string& uri, const unsigned long &ipa)
 {
-    std::cout << "handleAnnounce\n";
     m_response = "HTTP/1.1 200 OK\r\n\r\n";
     std::string error;
     try
     {
-        Announce a = parseAnnounce(uri);
+        std::map<std::string, std::string> options;
+        //UriOptionReader reader(uri);
+        std::istringstream stream(uri);
+        UriOptionReader reader(stream);
+        reader.readOptions(options);
+        std::cout << "\n# REQUEST PARAMETERS :\n" << options;
+        //Announce a = parseAnnounce(uri);
         //User u = m_server.database().getUser(passkey);
         //Torrent t = m_server.database().getTorrent(a.infohash);
-        m_server.database().addAnnounceLog(ipa, a);
+        //m_server.database().addAnnounceLog(ipa, a);
         //std::string error = acceptAnnounce();
     }
     catch (...)//abstract_option_reader::OptionNotFound& e)
     {
-      //  error = "field \"" + e.name() + "\" not found";
+        //  error = "field \"" + e.name() + "\" not found";
     }
     BencodedString bestr;
     bestr << BencodedString::beginDic;
@@ -126,21 +159,18 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
 
 Announce Connection::parseAnnounce(const std::string& uri)
 {
-    OptionManager options(new UriOptionReader(uri));
+    OptionManager options;//(new UriOptionReader(uri));
     Announce a;
     options.addOption("info_hash", a.infohash)
-           .addOption("peer_id", a.peerid)
-           .addOption("port", a.port)
-           .addOption("uploaded", a.uploaded)
-           .addOption("downloaded", a.downloaded)
-           .addOption("left", a.left)
-           .addOption("compact", a.compact, true)
-           .addOption("event", a.event, "none")
-           .addOption("numwant", a.numwant, 0);
+    .addOption("peer_id", a.peerid)
+    .addOption("port", a.port)
+    .addOption("uploaded", a.uploaded)
+    .addOption("downloaded", a.downloaded)
+    .addOption("left", a.left)
+    .addOption("compact", a.compact, true)
+    .addOption("event", a.event, "none")
+    .addOption("numwant", a.numwant, 0);
     options.readOptions();
-    std::cout << "info : " << a.infohash << std::endl;
-    std::cout << "port : " << a.port << std::endl;
-    std::cout << "event : " << a.event << std::endl;
     return a;
 }
 

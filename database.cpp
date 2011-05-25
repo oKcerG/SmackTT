@@ -73,6 +73,6 @@ void Database::getConfig(std::map<std::string, std::string>& map)
 {
     mysqlpp::Query query = m_connection.query("SELECT name, value FROM xbt_config");
     mysqlpp::StoreQueryResult res = query.store();
-    foreach (mysqlpp::Row row, res)
+    foreach (mysqlpp::Row& row, res)
         map[row[0].c_str()]  = row[1].c_str();
 }

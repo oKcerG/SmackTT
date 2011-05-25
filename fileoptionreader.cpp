@@ -4,13 +4,19 @@
 
 FileOptionReader::FileOptionReader(const std::string& fileName) : m_fileName(fileName)
 {
+
 }
 
 void FileOptionReader::doReadOptions(std::map<std::string, std::string>& values)
 {
+
     std::ifstream fileStream(m_fileName.c_str(), std::ifstream::in);
     if (!fileStream.is_open())
         throw std::runtime_error("Can't open " + m_fileName);
+
+    FileStreamReader reader(fileStream);
+    reader.readOptions(values);/*
+
     std::string line;
     size_t pos;
     std::string name, value;
@@ -27,5 +33,6 @@ void FileOptionReader::doReadOptions(std::map<std::string, std::string>& values)
         if (!name.empty() && name[0] != '#')
             values[name] = value;
     }
-    fileStream.close();
+    fileStream.close();*/
 }
+
