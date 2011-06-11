@@ -19,24 +19,7 @@ Database::~Database()
     //dtor
 }
 
-std::string Database::getPeersIP(const std::string& infoHash)
-{
-    std::string results;
-    std::cout << "querying\n";
-    mysqlpp::Query query = m_connection.query("SELECT ipa, port FROM xbt_announce_log WHERE info_hash = %0q ORDER BY RAND() LIMIT 5");
-    query.parse();
-    mysqlpp::StoreQueryResult res = query.store(infoHash);
-    for (mysqlpp::StoreQueryResult::iterator it = res.begin(); it != res.end(); it++)
-        results += utils::peerString((*it)[0], (*it)[1]);
-    return results;
-}
-
-std::string Database::getLeechersIP(const std::string& infoHash)
-{
-    std::string vec;
-    return vec;
-}
-
+/*
 void Database::addAnnounceLog(unsigned long address, const Announce& req)
 {
     mysqlpp::Query query = m_connection.query();
@@ -52,21 +35,22 @@ void Database::addAnnounceLog(unsigned long address, const Announce& req)
     query << 0 << ")";
     mysqlpp::SimpleResult res = query.execute();
 }
+*/
 
-
-User Database::getUser(const std::string& passkey)
+User& Database::getUser(const std::string& passkey)
 {
-    User u;
-    u.uid = 0;
-    u.can_leech = true;
-    return u;
+    std::unordered_map<std::string, User>::iterator it = m_users.find(passkey);
+    if (it == m_users.end())
+        throw std::runtime_error("User not found");
+    return it->second;
 }
 
-Torrent Database::getTorrent(const std::string& infoHash)
+Torrent& Database::getTorrent(const std::string& infoHash)
 {
-    Torrent t;
-    t.fid = 0;
-    return t;
+    std::unordered_map<std::string, Torrent>::iterator it = m_torrents.find(infoHash);
+    if (it == m_torrents.end())
+        throw std::runtime_error("Torrent not found");
+    return it->second;
 }
 
 void Database::getConfig(std::map<std::string, std::string>& map)
@@ -75,4 +59,35 @@ void Database::getConfig(std::map<std::string, std::string>& map)
     mysqlpp::StoreQueryResult res = query.store();
     foreach (mysqlpp::Row& row, res)
         map[row[0].c_str()]  = row[1].c_str();
+}
+
+
+void Database::loadTorrents()
+{
+    /*mysqlpp::Query query = m_connection.query("SELECT ID, info_hash, freetorrent, Snatched FROM torrents ORDER BY ID;");
+	if(mysqlpp::StoreQueryResult res = query.store()) {
+		mysqlpp::String one("1"); // Hack to get around bug in mysql++3.0.0
+		size_t num_rows = res.num_rows();
+		for(size_t i = 0; i < num_rows; i++) {
+			std::string info_hash;
+			res[i][1].to_string(info_hash);
+
+			torrent t;
+			t.id = res[i][0];
+			if(res[i][2].compare(one) == 0) {
+				t.free_torrent = true;
+			} else {
+				t.free_torrent = false;
+			}
+			t.balance = 0;
+			t.completed = res[i][3];
+			t.last_selected_seeder = "";
+			torrents[info_hash] = t;
+		}
+	}*/
+}
+
+void loadUsers()
+{
+
 }

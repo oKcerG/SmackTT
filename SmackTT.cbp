@@ -51,6 +51,7 @@
 			<Add library="mysqlpp" />
 			<Add directory="..\libs\mysql++-3.1.0" />
 		</Linker>
+		<Unit filename="announce.cpp" />
 		<Unit filename="announce.h" />
 		<Unit filename="bencodedstring.cpp" />
 		<Unit filename="bencodedstring.h" />
@@ -66,6 +67,7 @@
 		<Unit filename="databaseoptionreader.h" />
 		<Unit filename="fileoptionreader.cpp" />
 		<Unit filename="fileoptionreader.h" />
+		<Unit filename="istreamoptionreader.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="option.cpp" />
 		<Unit filename="option.h" />

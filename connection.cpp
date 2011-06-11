@@ -65,11 +65,14 @@ void Connection::read(const boost::system::error_code& error, std::size_t transf
 
     std::istream is(&m_buffer);
 
-    std::string method, uri, http_version;
-    is >> method >> uri >> http_version;
-    is.ignore(2); // ignore CR LF
+    std::string uri;
+    is.ignore(5); // ignore "GET /"
+    is >> uri;
+    is.ignore(11); // ignore " HTTP/1.1\r\n"
 
-    IStreamOptionReader<':','\n', doNothing, trim_left, alwaysFalse> headersReader(is);
+    std::cout << "\n# HTTP URI :\n" << uri<< "\n";
+
+    IStreamOptionReader<':','\n', doNothing, trim_left> headersReader(is);
     std::map<std::string, std::string> headers;
     headersReader.readOptions(headers);
 
@@ -78,9 +81,10 @@ void Connection::read(const boost::system::error_code& error, std::size_t transf
     ba::ip::tcp::endpoint endpoint = m_socket.remote_endpoint();
     ba::ip::address_v4 address = endpoint.address().to_v4();
 
+
     handleRequest(uri, address.to_ulong());
 
-    ba::async_write(m_socket, ba::buffer(m_response),
+    ba::async_write(m_socket, ba::buffer("HTTP/1.1 200 OK\r\n\r\n" + m_response.str()),
                     boost::bind(&Connection::write, shared_from_this(), ba::placeholders::error));
 }
 
@@ -92,91 +96,66 @@ void Connection::write(const boost::system::error_code& error)
 
 void Connection::handleRequest(const std::string& request, const unsigned long &ipa)
 {
-    size_t pos = 1;
-    std::string passkey;
-    if (request.length() > 34)
+    m_response << BencodedString::beginDic;
+    try
     {
-        if (request[33] == '/')
+        size_t pos = 0;
+        std::string passkey;
+        if (request.length() > 33)
         {
-            passkey = request.substr(1, 32);
-            pos = 34;
+            if (request[32] == '/')
+            {
+                passkey = request.substr(0, 32);
+                std::cout << "\n# PASSKEY : " << passkey << std::endl;
+                pos = 33;
+            }
+            else
+                throw std::runtime_error("Ill-formed request, where is the passkey ?");
         }
+        else
+            throw std::runtime_error("request too short");
+        size_t pos2 = request.find('?', pos);
+        if (pos2 == std::string::npos)
+           throw std::runtime_error("method not found!");
+        std::string method = request.substr(pos, pos2 - pos);
+        pos2++;
+        std::cout << "\n# METHOD : " << method << std::endl;
+        std::string uri = request.substr(pos2, request.length() - pos2);
+        if (method == "announce")
+            handleAnnounce(passkey, uri, ipa);
     }
-    size_t pos2 = request.find('?', pos);
-    if (pos2 == std::string::npos)
-        std::cerr << "method not found!\n";
-    std::string method = request.substr(pos, pos2 - pos);
-    pos2++;
-    std::cout << "\n# METHOD : " << method << std::endl;
-    std::string uri = request.substr(pos2, request.length() - pos2);
-    if (method == "announce")
-        handleAnnounce(passkey, uri, ipa);
+    catch (std::exception& e)
+    {
+         m_response << "failure reason" << e.what();
+    }
+    m_response << BencodedString::end;
 }
 
 void Connection::handleAnnounce(const std::string& passkey, const std::string& uri, const unsigned long &ipa)
 {
-    m_response = "HTTP/1.1 200 OK\r\n\r\n";
-    std::string error;
-    try
-    {
-        std::map<std::string, std::string> options;
-        //UriOptionReader reader(uri);
-        std::istringstream stream(uri);
-        UriOptionReader reader(stream);
-        reader.readOptions(options);
-        std::cout << "\n# REQUEST PARAMETERS :\n" << options;
-        //Announce a = parseAnnounce(uri);
-        //User u = m_server.database().getUser(passkey);
-        //Torrent t = m_server.database().getTorrent(a.infohash);
-        //m_server.database().addAnnounceLog(ipa, a);
+        std::cout << "\n# ANNOUNCE :\n";
+        Announce a(uri);
+        Database& database = m_server.database();
+        User u = database.getUser(passkey);
+        Torrent t = database.getTorrent(a.infohash);
+        //database.addAnnounceLog(ipa, a);
         //std::string error = acceptAnnounce();
-    }
-    catch (...)//abstract_option_reader::OptionNotFound& e)
-    {
-        //  error = "field \"" + e.name() + "\" not found";
-    }
-    BencodedString bestr;
-    bestr << BencodedString::beginDic;
-    if (!error.empty())
-    {
-        bestr << "failure reason" << error;
-    }
-    else
-    {
-        bestr << "warning message" << "This tracker is in developement";
-        bestr << "interval" << m_server.config().announce_interval();
-        bestr << "min interval" << m_server.config().announce_interval();
-        bestr << "complete" << 69;
-        bestr << "incomplete" << 51;
-        bestr << "peers";
+        throw std::runtime_error("coucou");
+
+        m_response << "warning message" << "This tracker is in developement";
+        m_response << "interval" << m_server.config().announce_interval();
+        m_response << "min interval" << m_server.config().announce_interval();
+        m_response << "complete" << 69;
+        m_response << "incomplete" << 51;
+        m_response << "peers";
         std::string peersIP;
         //peersIP = m_server.database().getPeersIP(req.infohash);
-        bestr << peersIP;;
-    }
-    bestr << BencodedString::end;
-    m_response += bestr.str();
-}
-
-Announce Connection::parseAnnounce(const std::string& uri)
-{
-    OptionManager options;//(new UriOptionReader(uri));
-    Announce a;
-    options.addOption("info_hash", a.infohash)
-    .addOption("peer_id", a.peerid)
-    .addOption("port", a.port)
-    .addOption("uploaded", a.uploaded)
-    .addOption("downloaded", a.downloaded)
-    .addOption("left", a.left)
-    .addOption("compact", a.compact, true)
-    .addOption("event", a.event, "none")
-    .addOption("numwant", a.numwant, 0);
-    options.readOptions();
-    return a;
+        m_response << peersIP;
 }
 
 std::string Connection::acceptAnnounce(const Announce& announce, const User& user, const Torrent& torrent, const unsigned long &ipa)
 {
-    if (!m_server.config().offline_message().empty())
+    /*if (!m_server.config().offline_message().empty())
         return m_server.config().offline_message();
     if (!user.uid && !m_server.config().anonymous_announce())
         return "unregistered torrent pass";
@@ -193,25 +172,10 @@ std::string Connection::acceptAnnounce(const Announce& announce, const User& use
         error += stream.str();
         error += " minute(s) before downloading this torrent";
         return error;
-    }
+    }*/
     // to do :
     // torrent limit
     // peer limit
     // Client whitelist
     return "";
-}
-
-std::string Connection::bencodedAnounceResponse(const std::string& passkey, const Announce& req) const
-{
-    BencodedString bstr;
-    bstr << BencodedString::beginDic;
-    bstr << "warning message" << "This tracker is in developement";
-    bstr << "interval" << m_server.config().announce_interval();
-    bstr << "min interval" << m_server.config().announce_interval();
-    bstr << "complete" << 69;
-    bstr << "incomplete" << 51;
-    bstr << "peers";
-    bstr << m_server.database().getPeersIP(req.infohash);
-    bstr << BencodedString::end;
-    return bstr.str();
 }

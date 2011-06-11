@@ -5,15 +5,10 @@
 
 struct User
 {
-    int uid;
- 	int torrent_pass_version;
+    unsigned int uid;
  	bool can_leech;
-	int wait_time;
-	int peers_limit;
-	int torrents_limit;
-	std::string torrent_pass;
- 	unsigned long int downloaded;
- 	unsigned long int uploaded;
+ 	unsigned long long downloaded;
+ 	unsigned long long uploaded;
 };
 
 #endif // USER_H

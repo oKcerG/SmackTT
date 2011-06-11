@@ -4,6 +4,9 @@
 #include <mysql++.h>
 #include <vector>
 #include <string>
+#include <unordered_map>
+#include "user.h"
+#include "torrent.h"
 
 class DatabaseConfig;
 class Announce;
@@ -16,17 +19,16 @@ class Database
         Database(const DatabaseConfig& config);
         ~Database();
 
-        std::string getPeersIP(const std::string& infoHash);
-        std::string getLeechersIP(const std::string& infoHash);
-        User getUser(const std::string& passkey);
-        Torrent getTorrent(const std::string& infoHash);
-        void addAnnounceLog(unsigned long address, const Announce& request);
+        User& getUser(const std::string& passkey);
+        Torrent& getTorrent(const std::string& infoHash);
         void getConfig(std::map<std::string, std::string>& map);
 
-    protected:
-
     private:
+        void loadTorrents();
+        void loadUsers();
         mysqlpp::Connection m_connection;
+        std::unordered_map<std::string, User> m_users;
+        std::unordered_map<std::string, Torrent> m_torrents;
 };
 
 #endif // DATABASE_H

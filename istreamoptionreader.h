@@ -13,7 +13,7 @@ char delim1,
 char delim2,
 void (*func1)(std::string&),
 void (*func2)(std::string&),
-bool (*pred)(const std::string&)
+bool (*pred)(const std::string&) = alwaysFalse
 >
 class IStreamOptionReader : public OptionReader
 {
