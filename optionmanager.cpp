@@ -35,6 +35,13 @@ void OptionManager::readOptions()
     foreach(OptionReader& reader, m_readers)
         reader.readOptions(values);
 
+    /*typedef std::pair<std::string, std::string> string_pair;
+    foreach (const string_pair& pair, values)
+    {
+        std::cout.width(15);
+        std::cout << pair.first << " : " << pair.second << std::endl;
+    }*/
+
     std::map<std::string, std::string>::const_iterator vit, vend = values.end();
     foreach (Option& option, m_options)
     {

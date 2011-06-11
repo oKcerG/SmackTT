@@ -6,6 +6,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <string>
 #include "announce.h"
+#include "bencodedstring.h"
 
 class Server;
 class User;
@@ -23,8 +24,6 @@ public:
 protected:
     void handleRequest(const std::string& reques, const unsigned long &ipa);
     void handleAnnounce(const std::string& passkey, const std::string& uri, const unsigned long &ipa);
-    Announce parseAnnounce(const std::string& uri);
-    std::string bencodedAnounceResponse(const std::string& passkey, const Announce& request) const;
     std::string acceptAnnounce(const Announce& announce, const User& user, const Torrent& torrent, const unsigned long &ipa);
 
 private:
@@ -34,7 +33,7 @@ private:
 
     boost::asio::ip::tcp::socket m_socket;
     boost::asio::streambuf m_buffer;
-    std::string m_response;
+    BencodedString m_response;
     Server &m_server;
 };
 

@@ -2,13 +2,15 @@
 #include "option.h"
 #include "fileoptionreader.h"
 #include "databaseoptionreader.h"
+#include <fstream>
+#include <stdexcept>
 
 Config::Config(Database& database)
 {
     m_manager.addReader(new FileOptionReader("smacktt.conf"));
     m_manager.addReader(new DatabaseOptionReader(database));
 
-    m_manager.addOption("announce_interval", m_announce_interval, 1800)
+    m_manager.addOption("announce_interval", m_announce_interval, 1)
     .addOption("anonymous_announce", m_anonymous_announce, true)
     .addOption("anonymous_connect", m_anonymous_connect, true)
     .addOption("anonymous_scrape", m_anonymous_scrape, true)
