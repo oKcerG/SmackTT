@@ -44,7 +44,7 @@ std::string utils::decodeUri(const std::string& uri)
     return decoded;
 }
 
-std::string utils::peerString(unsigned long ip, int port)
+std::string utils::peerString(unsigned long ip, unsigned int port)
 {
     std::string result;
 

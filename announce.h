@@ -18,11 +18,11 @@ struct Announce
     std::string peerid;
     unsigned short port;
     Event event;
-    int uploaded;
-    int downloaded;
-    int left;
+    unsigned int uploaded;
+    unsigned int downloaded;
+    unsigned int left;
     bool compact;
-    int numwant;
+    size_t numwant;
 };
 
 template <> void OptionImpl<Announce::Event>::setValue(const std::string& str);

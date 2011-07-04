@@ -75,6 +75,8 @@
 		<Unit filename="optionmanager.h" />
 		<Unit filename="optionreader.cpp" />
 		<Unit filename="optionreader.h" />
+		<Unit filename="peer.cpp" />
+		<Unit filename="peer.h" />
 		<Unit filename="schedule.cpp" />
 		<Unit filename="schedule.h" />
 		<Unit filename="server.cpp" />
