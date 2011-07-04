@@ -12,6 +12,8 @@
 
 Database::Database(const DatabaseConfig& config) : m_connection(config.database().c_str(), config.host().c_str(), config.user().c_str(), config.password().c_str())
 {
+    loadTorrents();
+    loadUsers();
 }
 
 Database::~Database()
@@ -58,36 +60,38 @@ void Database::getConfig(std::map<std::string, std::string>& map)
     mysqlpp::Query query = m_connection.query("SELECT name, value FROM xbt_config");
     mysqlpp::StoreQueryResult res = query.store();
     foreach (mysqlpp::Row& row, res)
-        map[row[0].c_str()]  = row[1].c_str();
+    map[row[0].c_str()]  = row[1].c_str();
 }
 
 
 void Database::loadTorrents()
 {
-    /*mysqlpp::Query query = m_connection.query("SELECT ID, info_hash, freetorrent, Snatched FROM torrents ORDER BY ID;");
-	if(mysqlpp::StoreQueryResult res = query.store()) {
-		mysqlpp::String one("1"); // Hack to get around bug in mysql++3.0.0
-		size_t num_rows = res.num_rows();
-		for(size_t i = 0; i < num_rows; i++) {
-			std::string info_hash;
-			res[i][1].to_string(info_hash);
-
-			torrent t;
-			t.id = res[i][0];
-			if(res[i][2].compare(one) == 0) {
-				t.free_torrent = true;
-			} else {
-				t.free_torrent = false;
-			}
-			t.balance = 0;
-			t.completed = res[i][3];
-			t.last_selected_seeder = "";
-			torrents[info_hash] = t;
-		}
-	}*/
+    mysqlpp::Query query = m_connection.query("SELECT ID, info_hash, freetorrent, Snatched FROM torrents ORDER BY ID;");
+    if(mysqlpp::StoreQueryResult res = query.store())
+    {
+        m_torrents.reserve(res.size());
+        foreach (const mysqlpp::Row& row, res)
+        {
+           /* unsigned int id = row[0];
+            std::string infohash = row[1];
+            bool fl = row[2];
+            unsigned int completed = row[3];
+            Torrent torrent(row[0], row[1], row[2], row[3]);
+            torrents[row[2]] = torrent;*/
+        }
+    }
 }
 
-void loadUsers()
+void Database::loadUsers()
 {
-
+    mysqlpp::Query query = m_connection.query("SELECT ID, can_leech, torrent_pass FROM users_main WHERE Enabled='1';");
+    if(mysqlpp::StoreQueryResult res = query.store())
+    {
+        m_users.reserve(res.size());
+        foreach (const mysqlpp::Row& row, res)
+        {
+            std::cout << row[2] << "\n";
+            m_users.insert(std::make_pair(row[2], User(row[0], row[1])));
+        }
+    }
 }
