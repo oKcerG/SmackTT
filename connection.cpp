@@ -151,14 +151,14 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
         std::map<std::string, Peer>::iterator peerIterator = supposedContainer.find(announce.peerid);
         if (peerIterator != supposedContainer.end()) // Peer found where it should be
         {
-            uploaded == peerIterator->second.uploaded;
-            downloaded == peerIterator->second.downloaded;
+            uploaded = peerIterator->second.uploaded;
+            downloaded = peerIterator->second.downloaded;
             supposedContainer.erase(peerIterator);
         }
         else if ((peerIterator = otherContainer.find(announce.peerid)) != otherContainer.end())  // Peer found where it shouldn't be
         {
-            uploaded == peerIterator->second.uploaded;
-            downloaded == peerIterator->second.downloaded;
+            uploaded = peerIterator->second.uploaded;
+            downloaded = peerIterator->second.downloaded;
             otherContainer.erase(peerIterator);
         }
     }
