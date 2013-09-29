@@ -2,7 +2,7 @@
 #define BOOST_ASIO_REPEATING_TIMER_H_INCLUDED
 
 // Developed 2007 by David C. Wyles (http:///www.codegorilla.co.uk)
-// released for public consumption under the same 
+// released for public consumption under the same
 // licensing policy as the boost library http://www.boost.org/LICENSE_1_0.txt
 //
 // most people will use the repeating_timer typedef for working with posix time
@@ -56,12 +56,12 @@ namespace asio
                     timer_->cancel();
                 }
                 timer_.reset();
-            }            
+            }
 
             // create new handler.
             handler_.reset( new handler_impl<WaitHandler>( handler ) );
             // create new timer
-            timer_ = internal_timer::create( this->io_service(), repeat_interval, handler_ );
+            timer_ = internal_timer::create( this->get_io_service(), repeat_interval, handler_ );
         }
 
         void stop()
@@ -75,7 +75,7 @@ namespace asio
                     timer_->cancel();
                 }
                 timer_.reset();
-            }            
+            }
         }
 
         void cancel() {stop();}
@@ -123,7 +123,7 @@ namespace asio
         {
         public:
             static internal_timer_ptr create( boost::asio::io_service& io_service,
-                                              typename timer_type::duration_type const & repeat_interval, 
+                                              typename timer_type::duration_type const & repeat_interval,
                                               boost::shared_ptr<handler_base> const & handler )
             {
                 internal_timer_ptr timer( new internal_timer( io_service ) );
@@ -154,7 +154,7 @@ namespace asio
             {
             }
 
-            void start( typename timer_type::duration_type const & repeat_interval, 
+            void start( typename timer_type::duration_type const & repeat_interval,
                         boost::shared_ptr<handler_base> const & handler )
             {
                 // only EVER called once, via create
@@ -186,7 +186,7 @@ namespace asio
                         }
                     }
                 }
-                
+
                 if( !error )
                 {
                     // check if we need to reschedule.
