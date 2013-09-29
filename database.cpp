@@ -91,7 +91,9 @@ void Database::loadUsers()
         foreach (const mysqlpp::Row& row, res)
         {
             std::cout << row[2] << "\n";
-            m_users.insert(std::make_pair(row[2], User(row[0], row[1])));
+            std::string passkey;
+            row[2].to_string(passkey);
+            m_users.insert(std::make_pair(passkey, User(row[0], row[1])));
         }
     }
 }
