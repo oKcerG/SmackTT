@@ -19,14 +19,17 @@ Announce::Announce(const std::string& uri)
     options.readOptions();
 }
 
-template <> void OptionImpl<Announce::Event>::setValue(const std::string& str)
+template <>
+void from_string<Announce::Event>(Announce::Event& value, const std::string& str)
 {
-    if (str == "started")
-        m_value = Announce::started;
+    if (str.empty())
+        value == Announce::none;
+    else if (str == "started")
+        value = Announce::started;
     else if (str == "stopped")
-        m_value = Announce::stopped;
+        value = Announce::stopped;
     else if (str == "completed")
-        m_value = Announce::completed;
+        value = Announce::completed;
     else
-        m_value = Announce::invalid;
+        value = Announce::invalid;
 }

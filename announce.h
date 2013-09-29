@@ -25,6 +25,7 @@ struct Announce
     size_t numwant;
 };
 
-template <> void OptionImpl<Announce::Event>::setValue(const std::string& str);
+template <>
+void from_string<Announce::Event>(Announce::Event& value, const std::string& str);
 
 #endif // ANNOUNCE_H
