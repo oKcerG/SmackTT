@@ -9,6 +9,7 @@ bool Option::mandatory() const
 {
     return m_mandatory;
 }
+
 const std::string& Option::name() const
 {
     return m_name;
@@ -20,7 +21,7 @@ void Option::operator<<(const std::string& str)
 }
 
 template <>
-void OptionImpl<std::string>::setValue(const std::string& str)
+void from_string<std::string>(std::string& value, const std::string& str)
 {
-    m_value = str;
+    value = str;
 }

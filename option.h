@@ -4,6 +4,10 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+
+template <typename T>
+void from_string(T& value, const std::string& str);
+
 class Option
 {
 
@@ -40,13 +44,19 @@ public:
 private:
     void setValue(const std::string& str)
     {
-        std::istringstream iss(str);
-        iss >> m_value;
+        from_string(m_value, str);
     }
     T& m_value;
 };
 
+template <typename T>
+void from_string(T& value, const std::string& str)
+{
+    std::istringstream iss(str);
+    iss >> value;
+}
+
 template <>
-void OptionImpl<std::string>::setValue(const std::string& str);
+void from_string<std::string>(std::string& value, const std::string& str);
 
 #endif // OPTION_H
