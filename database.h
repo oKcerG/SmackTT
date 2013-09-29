@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <memory>
 #include "user.h"
 #include "torrent.h"
 
@@ -19,16 +20,16 @@ class Database
         Database(const DatabaseConfig& config);
         ~Database();
 
-        User& getUser(const std::string& passkey);
-        Torrent& getTorrent(const std::string& infoHash);
+        std::shared_ptr<User> getUser(const std::string& passkey);
+        std::shared_ptr<Torrent> getTorrent(const std::string& infoHash);
         void getConfig(std::map<std::string, std::string>& map);
 
     private:
         void loadTorrents();
         void loadUsers();
         mysqlpp::Connection m_connection;
-        std::unordered_map<std::string, User> m_users;
-        std::unordered_map<std::string, Torrent> m_torrents;
+        std::unordered_map<std::string, std::shared_ptr<User> > m_users;
+        std::unordered_map<std::string, std::shared_ptr<Torrent> > m_torrents;
 };
 
 #endif // DATABASE_H

@@ -29,6 +29,7 @@ std::ostream& operator<<(std::ostream& stream, const std::map<std::string,std::s
         stream.width(15);
         stream << pair.first << " : " << pair.second << std::endl;
     }
+    return stream;
 }
 
 inline void trim_left(std::string& text)
@@ -58,7 +59,7 @@ void Connection::start()
                                      ba::placeholders::bytes_transferred));
 }
 
-void Connection::read(const boost::system::error_code& error, std::size_t transferred)
+void Connection::read(const boost::system::error_code& error, std::size_t /*tranferred*/)
 {
     if (error)
         std::cerr << "Connection read error : " << error.message() << std::endl;
@@ -128,6 +129,7 @@ void Connection::handleRequest(const std::string& request, const unsigned long &
     {
         m_response << "failure reason" << e.what();
     }
+
     m_response << BencodedString::end;
 }
 
@@ -136,19 +138,22 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
     std::cout << "\n# ANNOUNCE :\n";
     Announce announce(uri);
     Database& database = m_server.database();
-    User user = database.getUser(passkey);
-    Torrent torrent = database.getTorrent(announce.infohash);
+    std::shared_ptr<User> user = database.getUser(passkey);
+    std::shared_ptr<Torrent> torrent = database.getTorrent(announce.infohash);
 
-    bool leecher = announce.left;
-    std::map<std::string, Peer>& supposedContainer = leecher ? torrent.leechers : torrent.seeders;
-    std::map<std::string, Peer>& otherContainer = leecher ? torrent.seeders : torrent.leechers;
+    std::cout << "getTorrent\n";
+
+    bool leecher = announce.left > 0;
+    auto& supposedContainer = leecher ? torrent->leechers : torrent->seeders;
+    auto& otherContainer = leecher ? torrent->seeders : torrent->leechers;
+    //typedef (decltype(supposedContainer))::value_type PeerPair;
 
     long long uploaded = 0;
     long long downloaded = 0;
     if (announce.event == Announce::stopped)
     {
         announce.numwant = 0;
-        std::map<std::string, Peer>::iterator peerIterator = supposedContainer.find(announce.peerid);
+        auto peerIterator = supposedContainer.find(announce.peerid);
         if (peerIterator != supposedContainer.end()) // Peer found where it should be
         {
             uploaded = peerIterator->second.uploaded;
@@ -164,18 +169,19 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
     }
     else
     {
-        std::map<std::string, Peer>::iterator peerIterator = supposedContainer.find(announce.peerid);
+        auto peerIterator = supposedContainer.find(announce.peerid);
         if (peerIterator == supposedContainer.end()) // Peer not found where it should be
         {
-            std::pair<std::map<std::string, Peer>::iterator, bool> pair;
-            peerIterator == otherContainer.find(announce.peerid);
+            std::pair<decltype(peerIterator), bool> pair;
+            peerIterator = otherContainer.find(announce.peerid);
             if (peerIterator == otherContainer.end()) // Peer not found anywhere
             {
-
-                pair = supposedContainer.insert(std::make_pair(announce.peerid, Peer(user.uid, "", utils::peerString(ipa, announce.port))));
+                std::cout << "Peer not found anywhere" << std::endl;
+                pair = supposedContainer.insert(std::make_pair(announce.peerid, Peer(user->uid, "", utils::peerString(ipa, announce.port))));
             }
             else // Peer found where it shouldn't be
             {
+                std::cout << "Peer found where it shouldn't be" << std::endl;
                 pair = supposedContainer.insert(std::make_pair(announce.peerid, peerIterator->second));
                 otherContainer.erase(peerIterator);
             }
@@ -183,31 +189,37 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
                 throw std::runtime_error("Can't insert the peer");
             peerIterator = pair.first;
         }
+        else
+        {
+            std::cout << "Peer found where it should be" << std::endl;
+        }
     }
 
     //database.addAnnounceLog(ipa, a);
     size_t numpeers = 0;
     std::string peersIP;
-    typedef std::pair<const std::string, Peer> PeerPair;
-    foreach (PeerPair & pair, torrent.seeders)
+    if (true || leecher)
     {
-        if (numpeers >= announce.numwant)
-            break;
+        foreach (auto pair, torrent->seeders)
+        {
+            if (numpeers >= announce.numwant)
+                break;
 
-        Peer& peer = pair.second;
-        if (peer.userid = user.uid)
-            continue;
-        peersIP += peer.ip_port;
-        ++numpeers;
+            auto& peer = pair.second;
+            if (peer.userid == user->uid)
+                continue;
+            peersIP += peer.ip_port;
+            ++numpeers;
+        }
     }
 
-    foreach (PeerPair & pair, torrent.seeders)
+    foreach (auto pair, torrent->leechers)
     {
         if (numpeers >= announce.numwant)
             break;
 
-        Peer& peer = pair.second;
-        if (peer.userid = user.uid)
+        auto& peer = pair.second;
+        if (peer.userid == user->uid)
             continue;
         peersIP += peer.ip_port;
         ++numpeers;
@@ -216,8 +228,8 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
     m_response << "warning message" << "This tracker is in developement";
     m_response << "interval" << m_server.config().announce_interval();
     m_response << "min interval" << m_server.config().announce_interval();
-    m_response << "complete" << torrent.seeders.size();
-    m_response << "incomplete" << torrent.leechers.size();
+    m_response << "complete" << torrent->seeders.size();
+    m_response << "incomplete" << torrent->leechers.size();
     m_response << "peers";
     //peersIP = m_server.database().getPeersIP(req.infohash);
     m_response << peersIP;

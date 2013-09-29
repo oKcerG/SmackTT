@@ -39,17 +39,17 @@ void Database::addAnnounceLog(unsigned long address, const Announce& req)
 }
 */
 
-User& Database::getUser(const std::string& passkey)
+std::shared_ptr<User> Database::getUser(const std::string& passkey)
 {
-    std::unordered_map<std::string, User>::iterator it = m_users.find(passkey);
+    auto it = m_users.find(passkey);
     if (it == m_users.end())
         throw std::runtime_error("User not found");
     return it->second;
 }
 
-Torrent& Database::getTorrent(const std::string& infoHash)
+std::shared_ptr<Torrent> Database::getTorrent(const std::string& infoHash)
 {
-    std::unordered_map<std::string, Torrent>::iterator it = m_torrents.find(infoHash);
+    auto it = m_torrents.find(infoHash);
     if (it == m_torrents.end())
         throw std::runtime_error("Torrent not found");
     return it->second;
@@ -93,7 +93,7 @@ void Database::loadUsers()
             std::cout << row[2] << "\n";
             std::string passkey;
             row[2].to_string(passkey);
-            m_users.insert(std::make_pair(passkey, User(row[0], row[1])));
+            m_users.insert(std::make_pair(passkey, std::make_shared<User>(row[0], row[1])));
         }
     }
 }
