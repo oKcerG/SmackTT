@@ -1,28 +1,24 @@
 #include "bencodedstring.h"
-#include <sstream>
 
-BencodedString::BencodedString(const std::string& data) : m_data(data)
+
+BencodedString::BencodedString()
 {
 }
 
-const std::string& BencodedString::str() const
+std::string BencodedString::str() const
 {
-    return m_data;
+    return m_stream.str();
 }
 
 BencodedString& BencodedString::operator<<(int i)
 {
-    std::ostringstream stream;
-    stream << i;
-    m_data += "i" + stream.str() + "e";
+    m_stream << 'i' << i << 'e';
     return *this;
 }
 
 BencodedString& BencodedString::operator<<(const std::string& str)
 {
-    std::ostringstream stream;
-    stream << str.size();
-    m_data += stream.str() + ":" + str;
+    m_stream << str.size() << ':' << str;
     return *this;
 }
 
@@ -33,19 +29,19 @@ BencodedString& BencodedString::operator<<(const manipulator& manip)
 
 BencodedString& BencodedString::beginDic(BencodedString& bstr)
 {
-    bstr.m_data += 'd';
+    bstr.m_stream << 'd';
     return bstr;
 }
 
 BencodedString& BencodedString::beginList(BencodedString& bstr)
 {
-    bstr.m_data += 'l';
+    bstr.m_stream << 'l';
     return bstr;
 }
 
 BencodedString& BencodedString::end(BencodedString& bstr) //end a list or a dic
 {
-    bstr.m_data += 'e';
+    bstr.m_stream << 'e';
     return bstr;
 }
 

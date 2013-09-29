@@ -1,18 +1,18 @@
 #ifndef BENCODEDSTRING_H
 #define BENCODEDSTRING_H
 
+#include <sstream>
 #include <string>
-#include <map>
-#include <boost/variant.hpp>
 
 class BencodedString
 {
 public:
     typedef BencodedString& manipulator(BencodedString&);
 
-    BencodedString(const std::string& data = std::string());
+    BencodedString();
 
-    const std::string& str() const;
+    std::string str() const;
+    void clear();
 
     BencodedString& operator<<(int i);
     BencodedString& operator<<(const std::string& str);
@@ -23,7 +23,7 @@ public:
     static BencodedString& end(BencodedString& bstr);
 
 private:
-    std::string m_data;
+    std::ostringstream m_stream;
 };
 
 #endif // BENCODEDSTRING_H
