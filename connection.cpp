@@ -5,7 +5,6 @@
 #include <iostream>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/foreach.hpp>
 #include "server.h"
 #include "config.h"
 #include "database.h"
@@ -17,14 +16,12 @@
 #include "torrent.h"
 #include <boost/algorithm/string.hpp>
 
-#define foreach BOOST_FOREACH
-
 namespace ba = boost::asio;
 
 std::ostream& operator<<(std::ostream& stream, const std::map<std::string,std::string>& map)
 {
     typedef std::pair<std::string, std::string> string_pair;
-    foreach (const string_pair& pair, map)
+    for (const string_pair& pair : map)
     {
         stream.width(15);
         stream << pair.first << " : " << pair.second << std::endl;
@@ -200,7 +197,7 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
     std::string peersIP;
     if (true || leecher)
     {
-        foreach (auto pair, torrent->seeders)
+        for (auto pair : torrent->seeders)
         {
             if (numpeers >= announce.numwant)
                 break;
@@ -213,7 +210,7 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
         }
     }
 
-    foreach (auto pair, torrent->leechers)
+    for (auto pair : torrent->leechers)
     {
         if (numpeers >= announce.numwant)
             break;

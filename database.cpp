@@ -7,9 +7,6 @@
 #include "user.h"
 #include "torrent.h"
 
-#include <boost/foreach.hpp>
-#define foreach BOOST_FOREACH
-
 Database::Database(const DatabaseConfig& config) : m_connection(config.database().c_str(), config.host().c_str(), config.user().c_str(), config.password().c_str())
 {
     loadTorrents();
@@ -59,7 +56,7 @@ void Database::getConfig(std::map<std::string, std::string>& map)
 {
     mysqlpp::Query query = m_connection.query("SELECT name, value FROM xbt_config");
     mysqlpp::StoreQueryResult res = query.store();
-    foreach (mysqlpp::Row& row, res)
+    for (const mysqlpp::Row& row : res)
     map[row[0].c_str()]  = row[1].c_str();
 }
 
@@ -70,7 +67,7 @@ void Database::loadTorrents()
     if(mysqlpp::StoreQueryResult res = query.store())
     {
         m_torrents.reserve(res.size());
-        foreach (const mysqlpp::Row& row, res)
+        for (const mysqlpp::Row& row : res)
         {
            /* unsigned int id = row[0];
             std::string infohash = row[1];
@@ -88,7 +85,7 @@ void Database::loadUsers()
     if(mysqlpp::StoreQueryResult res = query.store())
     {
         m_users.reserve(res.size());
-        foreach (const mysqlpp::Row& row, res)
+        for (const mysqlpp::Row& row : res)
         {
             std::cout << row[2] << "\n";
             std::string passkey;

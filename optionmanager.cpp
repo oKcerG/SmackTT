@@ -1,8 +1,5 @@
 #include "optionmanager.h"
-#include <boost/foreach.hpp>
 #include <stdexcept>
-
-#define foreach BOOST_FOREACH
 
 OptionManager::OptionManager()
 {
@@ -32,7 +29,7 @@ OptionManager& OptionManager::addOption(Option* option)
 void OptionManager::readOptions()
 {
     std::map<std::string, std::string> values;
-    foreach(OptionReader& reader, m_readers)
+    for (auto& reader : m_readers)
         reader.readOptions(values);
 
     /*typedef std::pair<std::string, std::string> string_pair;
@@ -42,10 +39,11 @@ void OptionManager::readOptions()
         std::cout << pair.first << " : " << pair.second << std::endl;
     }*/
 
-    std::map<std::string, std::string>::const_iterator vit, vend = values.end();
-    foreach (Option& option, m_options)
+    auto vend = values.end();
+    for (auto& option : m_options)
     {
-        if ((vit = values.find(option.name())) != vend)
+        auto vit = values.find(option.name());
+        if (vit != vend)
             option << vit->second;
         else if (option.mandatory())
             throw std::runtime_error("Option not found : " +option.name());

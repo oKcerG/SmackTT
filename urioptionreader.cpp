@@ -2,10 +2,6 @@
 #include "utils.h"
 #include <vector>
 #include <boost/algorithm/string.hpp>
-#include <boost/foreach.hpp>
-
-#define foreach BOOST_FOREACH
-
 /*
 using namespace boost;
 using namespace std;
