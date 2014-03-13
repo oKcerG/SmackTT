@@ -23,7 +23,7 @@ template <>
 void from_string<Announce::Event>(Announce::Event& value, const std::string& str)
 {
     if (str.empty())
-        value == Announce::none;
+        value = Announce::none;
     else if (str == "started")
         value = Announce::started;
     else if (str == "stopped")
