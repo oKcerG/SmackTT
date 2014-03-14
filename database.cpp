@@ -69,12 +69,11 @@ void Database::loadTorrents()
         m_torrents.reserve(res.size());
         for (const mysqlpp::Row& row : res)
         {
-           /* unsigned int id = row[0];
-            std::string infohash = row[1];
+            unsigned int id = row[0];
+            std::string infohash = row[1].c_str();
             bool fl = row[2];
             unsigned int completed = row[3];
-            Torrent torrent(row[0], row[1], row[2], row[3]);
-            torrents[row[2]] = torrent;*/
+            m_torrents[infohash] = std::make_shared<Torrent>(id, infohash, fl, completed);
         }
     }
 }

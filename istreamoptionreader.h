@@ -5,8 +5,8 @@
 #include <istream>
 #include <iostream>
 
-inline void doNothing(std::string& string) {}
-inline bool alwaysFalse(const std::string& string) {return false;}
+inline void doNothing(std::string& /*string*/) {}
+inline bool alwaysFalse(const std::string& /*string*/) {return false;}
 
 template <
 char delim1,

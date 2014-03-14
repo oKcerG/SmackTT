@@ -24,7 +24,7 @@ public:
 protected:
     void handleRequest(const std::string& reques, const unsigned long &ipa);
     void handleAnnounce(const std::string& passkey, const std::string& uri, const unsigned long &ipa);
-    std::string acceptAnnounce(const Announce& announce, const User& user, const Torrent& torrent, const unsigned long &ipa);
+    //std::string acceptAnnounce(const Announce& announce, const User& user, const Torrent& torrent, const unsigned long &ipa);
 
 private:
     Connection(Server &server);

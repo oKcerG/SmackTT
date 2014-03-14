@@ -6,7 +6,7 @@
 struct Peer
 {
     Peer(unsigned int uid, const std::string& uagent, const std::string& peerString);
-	int userid;
+	unsigned int userid;
 	std::string user_agent;
 	std::string ip_port;
 	long long uploaded;

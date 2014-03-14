@@ -16,9 +16,9 @@ struct Torrent
     }
     unsigned int fid;
     std::string info_hash;
+    bool free_torrent;
     unsigned int completed;
     unsigned long long balance;
-    bool free_torrent;
     //time_t last_seeded;
     std::map<std::string, Peer> seeders;
     std::map<std::string, Peer> leechers;

@@ -13,6 +13,7 @@ class Option
 
 public:
     Option(const std::string& name, bool mandatory);
+    virtual ~Option(){}
 
     bool mandatory() const;
     const std::string& name() const;

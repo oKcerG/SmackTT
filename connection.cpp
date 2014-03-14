@@ -232,9 +232,11 @@ void Connection::handleAnnounce(const std::string& passkey, const std::string& u
     m_response << peersIP;
 }
 
+
+/*
 std::string Connection::acceptAnnounce(const Announce& announce, const User& user, const Torrent& torrent, const unsigned long &ipa)
 {
-    /*if (!m_server.config().offline_message().empty())
+    if (!m_server.config().offline_message().empty())
         return m_server.config().offline_message();
     if (!user.uid && !m_server.config().anonymous_announce())
         return "unregistered torrent pass";
@@ -251,10 +253,12 @@ std::string Connection::acceptAnnounce(const Announce& announce, const User& use
         error += stream.str();
         error += " minute(s) before downloading this torrent";
         return error;
-    }*/
+    }
     // to do :
     // torrent limit
     // peer limit
     // Client whitelist
     return "";
 }
+
+*/
